@@ -128,17 +128,21 @@ def atualiza_veiculo(request, id):
 
 @login_required
 def exclui_cliente(request, id):
-    if request.user.is_staff:
-        obj = Cliente.objects.get(id=id)
-        if request.POST:
-            obj.delete()
-            messages.success(request, "Cliente excluido com sucesso!")
-            return redirect('url_listagem_clientes')
+    try:
+        if request.user.is_staff:
+            obj = Cliente.objects.get(id=id)
+            if request.POST:
+                obj.delete()
+                messages.success(request, "Cliente excluido com sucesso!")
+                return redirect('url_listagem_clientes')
+            else:
+                contexto = {'dados': obj.nome, 'id': obj.id, 'url': 'url_listagem_clientes'}
+                return render(request, 'core/confirma_exclusao.html', contexto)
         else:
-            contexto = {'dados': obj.nome, 'id': obj.id, 'url': 'url_listagem_clientes'}
-            return render(request, 'core/confirma_exclusao.html', contexto)
-    else:
-        return render(request, 'core/NaoAutorizado.html')
+            return render(request, 'core/NaoAutorizado.html')
+    except:
+        return render(request, 'error.html', {'msg': 'Cliente não pode ser excluído!'})
+
 
 def exclui_veiculo(request, id):
     if request.user.is_staff:
