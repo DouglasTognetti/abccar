@@ -140,8 +140,8 @@ def exclui_cliente(request, id):
                 return render(request, 'core/confirma_exclusao.html', contexto)
         else:
             return render(request, 'core/NaoAutorizado.html')
-    except:
-        return render(request, 'error.html', {'msg': 'Cliente não pode ser excluído!'})
+    except Exception as erro:
+        return render(request, 'error.html', {'msg': 'Cliente não pode ser excluído!', 'obj': erro})
 
 
 def exclui_veiculo(request, id):
